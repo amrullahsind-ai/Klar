@@ -86,3 +86,10 @@ Setelah mengganti file, deploy ulang HTML di Vercel dan deploy ulang Apps Script
 - Record absensi menyimpan lokasi diterima (`locationName`) dan jarak dari titik tersebut.
 
 Catatan: Vercel hanya hosting frontend. Data login, password hash, lokasi, absensi, dan payroll tetap tersimpan di backend Apps Script/Google Sheet master. Kalau ingin benar-benar tanpa Google Sheet, backend harus pindah ke Supabase/Firebase/Neon, karena frontend Vercel saja tidak bisa menyimpan database permanen.
+
+
+## Patch terbaru
+- Monitor Absensi dan Payroll otomatis mengambil data terbaru dari server, jadi check-in karyawan langsung terbaca admin setelah refresh/masuk menu.
+- Backend menggabungkan absensi dari karyawan dengan data admin supaya autosync admin tidak menimpa absensi baru dari server.
+- Hapus status absensi dari admin memakai tombstone sehingga data di Sheet/server ikut bersih.
+- Kontrol logo sekarang mengatur ukuran logo di dalam frame, posisi X/Y, dan warna live preview.

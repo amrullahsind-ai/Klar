@@ -1,4 +1,4 @@
-const CACHE='edura-repo-v1';
+const CACHE='edura-repo-v2-attendance-sync-logo';
 const FILES=[
   '/',
   '/index.html',

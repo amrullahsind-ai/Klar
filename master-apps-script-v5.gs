@@ -80,12 +80,71 @@ function normalizeDataBeforeSave(data) {
   return data;
 }
 
+function mergeServerLiveData(current, incoming) {
+  if (!current) return incoming || {};
+  incoming = incoming || {};
+  const out = incoming;
+
+  // Employee PWA dapat menulis absensi kapan saja. Admin yang sedang membuka data lama
+  // tidak boleh menimpa absensi terbaru ketika autosync. Karena itu record server digabung,
+  // kecuali admin memang memberi tombstone/hapus eksplisit.
+  out.attendanceRecords = mergeAttendanceRecords(current.attendanceRecords || {}, incoming.attendanceRecords || {}, incoming._deletedAttendance || []);
+
+  // Request izin/sakit juga digabung berdasarkan id, agar request dari karyawan tidak hilang
+  // saat admin autosync dari cache lama.
+  const reqMap = {};
+  (current.attendanceRequests || []).forEach(r => { if (r && r.id) reqMap[r.id] = r; });
+  (incoming.attendanceRequests || []).forEach(r => { if (r && r.id) reqMap[r.id] = Object.assign({}, reqMap[r.id] || {}, r); });
+  out.attendanceRequests = Object.keys(reqMap).map(k => reqMap[k]);
+
+  // Jika karyawan baru saja ganti password, jangan kembalikan hash lama dari admin cache.
+  const curEmp = {};
+  (current.employees || []).forEach(e => { if (e && e.id) curEmp[e.id] = e; });
+  out.employees = (incoming.employees || []).map(e => {
+    const old = curEmp[e.id];
+    if (old && old.passwordChangedAt && (!e.passwordChangedAt || new Date(old.passwordChangedAt) > new Date(e.passwordChangedAt))) {
+      e.employeePinHash = old.employeePinHash;
+      e.passwordChangedAt = old.passwordChangedAt;
+    }
+    return e;
+  });
+  return out;
+}
+
+function mergeAttendanceRecords(existing, incoming, deleted) {
+  const merged = JSON.parse(JSON.stringify(existing || {}));
+  Object.keys(incoming || {}).forEach(date => {
+    merged[date] = merged[date] || {};
+    Object.keys(incoming[date] || {}).forEach(empId => {
+      const inc = incoming[date][empId];
+      const cur = merged[date][empId];
+      if (!cur) { merged[date][empId] = inc; return; }
+      const ti = new Date(inc.updatedAt || 0).getTime();
+      const tc = new Date(cur.updatedAt || 0).getTime();
+      if (!cur.updatedAt || ti >= tc) merged[date][empId] = Object.assign({}, cur, inc);
+    });
+  });
+  (deleted || []).forEach(item => {
+    const key = typeof item === 'string' ? item : (item.key || (item.date + '|' + item.employeeId));
+    const parts = String(key).split('|');
+    const date = parts[0], empId = parts[1];
+    if (date && empId && merged[date]) {
+      delete merged[date][empId];
+      if (Object.keys(merged[date]).length === 0) delete merged[date];
+    }
+  });
+  return merged;
+}
+
 function handleSaveAdmin(e) {
   try {
     const license = validateLicense(clean(e.parameter.licenseCode));
     const payload = e.parameter.payload || '';
     if (!payload) throw new Error('Missing payload');
-    let data = normalizeDataBeforeSave(JSON.parse(payload));
+    const incoming = JSON.parse(payload);
+    const currentRec = getPayload(license.licenseCode);
+    const current = currentRec && currentRec.payload ? JSON.parse(currentRec.payload) : null;
+    let data = normalizeDataBeforeSave(mergeServerLiveData(current, incoming));
     savePayload(license, JSON.stringify(data));
     writeMirrorTabs(license, data);
     writeLog(license.licenseCode, 'saveAdmin', 'OK');
@@ -152,6 +211,8 @@ function employeeCheckCore(e, mode) {
       rec.accuracy = accuracy;
       rec.locationId = activeLoc.id || '';
       rec.locationName = activeLoc.name || rules.name || 'Lokasi';
+      rec.updatedAt = new Date().toISOString();
+      rec.updatedBy = 'employee';
       rec.message = rec.isLate ? 'Check-in berhasil, status telat.' : 'Check-in berhasil, hadir 1 kali.';
     } else {
       if (!rec.checkInTime && rules.requireCheckInBeforeCheckout !== false) throw new Error('Belum check-in, tidak bisa check-out');
@@ -163,6 +224,8 @@ function employeeCheckCore(e, mode) {
       rec.checkoutAccuracy = accuracy;
       rec.checkoutLocationId = activeLoc.id || '';
       rec.checkoutLocationName = activeLoc.name || rules.name || 'Lokasi';
+      rec.updatedAt = new Date().toISOString();
+      rec.updatedBy = 'employee';
       rec.checkoutMessage = 'Check-out berhasil.';
     }
     data.attendanceRecords[date][emp.id] = rec;
@@ -192,7 +255,7 @@ function employeeRequestCore(e) {
     if (!needs) {
       data.attendanceRecords = data.attendanceRecords || {};
       data.attendanceRecords[date] = data.attendanceRecords[date] || {};
-      data.attendanceRecords[date][emp.id] = {status:type, date, reason, approvalStatus:'auto-approved', source:'request'};
+      data.attendanceRecords[date][emp.id] = {status:type, date:date, reason:reason, approvalStatus:'auto-approved', source:'request', updatedAt:new Date().toISOString(), updatedBy:'employee'};
     }
     savePayload(license, JSON.stringify(data));
     writeMirrorTabs(license, data);
@@ -210,6 +273,7 @@ function employeeChangePasswordCore(e) {
     if (!newHash) throw new Error('Password baru kosong');
     const target = (data.employees || []).find(x => x.id === emp.id);
     target.employeePinHash = newHash;
+    target.passwordChangedAt = new Date().toISOString();
     savePayload(license, JSON.stringify(data));
     writeMirrorTabs(license, data);
     writeLog(license.licenseCode, 'employee_change_password', 'OK ' + emp.nip);

@@ -57,3 +57,10 @@ Default demo:
 
 ## Catatan
 Kalau app masih terlihat versi lama, lakukan hard refresh atau buka incognito.
+
+
+## Patch terbaru
+- Monitor Absensi dan Payroll otomatis mengambil data terbaru dari server, jadi check-in karyawan langsung terbaca admin setelah refresh/masuk menu.
+- Backend menggabungkan absensi dari karyawan dengan data admin supaya autosync admin tidak menimpa absensi baru dari server.
+- Hapus status absensi dari admin memakai tombstone sehingga data di Sheet/server ikut bersih.
+- Kontrol logo sekarang mengatur ukuran logo di dalam frame, posisi X/Y, dan warna live preview.
