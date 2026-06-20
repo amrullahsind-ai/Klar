@@ -1,4 +1,5 @@
-# Edura V4 Full Rebuild
+# Edura V4.4 - Payroll UI Clean Fix
+
 
 Ini paket ulang dari nol. Abaikan ZIP sebelumnya.
 
@@ -102,3 +103,11 @@ Catatan: Vercel hanya hosting frontend. Data login, password hash, lokasi, absen
 - Golongan diambil dari contoh Excel dan mempengaruhi gaji pokok serta tunjangan kehadiran.
 - Jabatan fungsional diambil dari contoh Excel dan mempengaruhi tunjangan fungsional/rumah.
 - Lihat `ANALISIS_SAMPLE_GAJI.md` untuk ringkasan mapping dari Excel.
+
+
+## Catatan V4.4
+- Excel sample sekarang dipakai sebagai contoh aturan, bukan diimpor semua master jabatan/golongan.
+- Default jabatan dan golongan dibuat ringkas agar UI tidak penuh.
+- Bug gaji Rp0 diperbaiki lewat fallback `baseSalary/salary` dan normalisasi data karyawan.
+- Warna Edura dikunci untuk brand identity.
+- Daftar panjang dibatasi di halaman utama; klik `Lihat semua` untuk membuka modal tengah.
