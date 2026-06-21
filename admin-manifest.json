@@ -2,8 +2,9 @@
   "name": "Edura Admin",
   "short_name": "Edura Admin",
   "start_url": "/admin.html",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#f4f7fb",
+  "background_color": "#f1f5f9",
   "theme_color": "#0E3B36",
   "icons": [
     {
@@ -22,6 +23,5 @@
       "type": "image/svg+xml",
       "purpose": "any maskable"
     }
-  ],
-  "scope": "/"
+  ]
 }

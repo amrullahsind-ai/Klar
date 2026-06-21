@@ -1,3 +1,7 @@
+# Edura V5.3 Hard Delete + Stability Fix
+
+Versi ini memperbaiki hapus karyawan agar langsung menghapus dari server melalui endpoint khusus `deleteEmployee`, bukan hanya menunggu autosync.
+
 # Edura V4.4 - Payroll UI Clean Fix
 
 
@@ -168,3 +172,9 @@ Versi ini memperbaiki Excel legacy yang kolom nama berisi kode. PER UNIT menjadi
 ## Edura V5.1 Import Persistence Fix
 
 Versi ini memperbaiki bug data Excel yang hilang setelah pindah tab/refresh. Setelah import, data lokal dikunci sementara dan dikirim ulang ke server. Backend juga menggabungkan data karyawan agar import tidak hilang karena autosync payload lama.
+
+
+## V5.2 Delete Realtime Fix
+- Hapus karyawan langsung hilang dari tabel tanpa reload.
+- Tombstone karyawan yang dihapus dipertahankan saat refresh server agar data lama tidak muncul kembali.
+- Setelah hapus, aplikasi menahan refresh server sebentar dan memaksa sync penghapusan ke Apps Script.

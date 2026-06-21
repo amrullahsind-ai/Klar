@@ -107,3 +107,9 @@ Import Excel sekarang tidak lagi asal mengambil semua teks. Sheet slip/pinjaman/
 - Import Excel menolak baris judul/header agar tidak masuk sebagai karyawan.
 - Data karyawan dari Excel tidak langsung hilang saat pindah ke Payroll karena refresh server ditahan sampai autosync berjalan.
 - Jabatan/golongan hasil import tidak direset otomatis hanya karena jumlahnya banyak.
+
+
+## V5.2 Delete Realtime Fix
+- Hapus karyawan langsung hilang dari tabel tanpa reload.
+- Tombstone karyawan yang dihapus dipertahankan saat refresh server agar data lama tidak muncul kembali.
+- Setelah hapus, aplikasi menahan refresh server sebentar dan memaksa sync penghapusan ke Apps Script.
