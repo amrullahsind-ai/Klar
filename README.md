@@ -163,3 +163,8 @@ Versi ini memperbaiki Excel legacy yang kolom nama berisi kode. PER UNIT menjadi
 - Import Excel menolak baris judul/header agar tidak masuk sebagai karyawan.
 - Data karyawan dari Excel tidak langsung hilang saat pindah ke Payroll karena refresh server ditahan sampai autosync berjalan.
 - Jabatan/golongan hasil import tidak direset otomatis hanya karena jumlahnya banyak.
+
+
+## Edura V5.1 Import Persistence Fix
+
+Versi ini memperbaiki bug data Excel yang hilang setelah pindah tab/refresh. Setelah import, data lokal dikunci sementara dan dikirim ulang ke server. Backend juga menggabungkan data karyawan agar import tidak hilang karena autosync payload lama.

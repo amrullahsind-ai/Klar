@@ -1,5 +1,5 @@
 /**
- * Edura V4 Master License Server + Admin/Employee Backend
+ * Edura V5.1 Master License Server + Admin/Employee Backend
  *
  * Setup:
  * 1. Buat Google Sheet baru.
@@ -104,18 +104,49 @@ function mergeServerLiveData(current, incoming) {
   (incoming.deviceRequests || []).forEach(r => { if (r && r.id) devReqMap[r.id] = Object.assign({}, devReqMap[r.id] || {}, r); });
   out.deviceRequests = Object.keys(devReqMap).map(k => devReqMap[k]);
 
-  // Jika karyawan baru saja ganti password/device bind, jangan kembalikan data lama dari admin cache.
-  const curEmp = {};
-  (current.employees || []).forEach(e => { if (e && e.id) curEmp[e.id] = e; });
-  out.employees = (incoming.employees || []).map(e => {
-    const old = curEmp[e.id];
-    if (old && old.passwordChangedAt && (!e.passwordChangedAt || new Date(old.passwordChangedAt) > new Date(e.passwordChangedAt))) {
-      e.employeePinHash = old.employeePinHash;
-      e.passwordChangedAt = old.passwordChangedAt;
+  // Karyawan digabung, bukan diganti total. Ini mencegah data hasil import hilang
+  // ketika ada tab/admin lama yang autosync payload lama. Hapus permanen harus memakai _deletedEmployees.
+  out.employees = mergeEmployees(current.employees || [], incoming.employees || [], incoming._deletedEmployees || []);
+
+  // Payroll locks juga digabung agar snapshot payroll awal hasil import tidak hilang oleh payload lama.
+  out.locks = mergeLocks(current.locks || {}, incoming.locks || {}, out.employees || []);
+  return out;
+}
+
+function mergeEmployees(currentEmployees, incomingEmployees, deletedEmployees) {
+  const deleted = {};
+  (deletedEmployees || []).forEach(x => { const id = String(x.id || x.employeeId || x || ''); if (id) deleted[id] = true; });
+  const map = {};
+  (currentEmployees || []).forEach(e => { if (e && e.id && !deleted[e.id]) map[e.id] = e; });
+  (incomingEmployees || []).forEach(e => {
+    if (!e || !e.id || deleted[e.id]) return;
+    const old = map[e.id] || {};
+    const merged = Object.assign({}, old, e);
+    if (old.passwordChangedAt && (!e.passwordChangedAt || new Date(old.passwordChangedAt) > new Date(e.passwordChangedAt))) {
+      merged.employeePinHash = old.employeePinHash;
+      merged.passwordChangedAt = old.passwordChangedAt;
     }
-    if (old && old.devices) e.devices = mergeDevices(old.devices || [], e.devices || []);
-    return e;
+    if (old.devices || e.devices) merged.devices = mergeDevices(old.devices || [], e.devices || []);
+    map[e.id] = merged;
   });
+  return Object.keys(map).map(k => map[k]);
+}
+
+function mergeLocks(currentLocks, incomingLocks, employees) {
+  const valid = {};
+  (employees || []).forEach(e => { if (e && e.id) valid[e.id] = true; });
+  const out = JSON.parse(JSON.stringify(currentLocks || {}));
+  Object.keys(incomingLocks || {}).forEach(month => {
+    const cur = out[month] || {};
+    const inc = incomingLocks[month] || {};
+    const curItems = cur.items || [];
+    const incItems = inc.items || [];
+    // Incoming wins when it has at least as many items or a newer timestamp; otherwise preserve server snapshot.
+    const ti = new Date(inc.at || 0).getTime();
+    const tc = new Date(cur.at || 0).getTime();
+    if (!out[month] || incItems.length >= curItems.length || ti >= tc) out[month] = inc;
+  });
+  Object.keys(out).forEach(month => { out[month].items = (out[month].items || []).filter(item => valid[item.id]); });
   return out;
 }
 
