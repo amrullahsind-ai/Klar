@@ -3,253 +3,71 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Edura — Payroll Sekolah</title>
+  <title>Edura</title>
+  <meta name="description" content="Edura - sistem payroll, absensi GPS, slip gaji, dan manajemen karyawan sekolah/yayasan." />
   <link rel="icon" href="/edura-logo.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..900&display=swap" rel="stylesheet" />
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    :root{
+      --primary:#0E3B36;--accent:#E2674D;--bg:#f4f7fb;--surface:#fff;--text:#0f172a;--muted:#64748b;--border:#d8e1ee;
+      --shadow:0 24px 70px rgba(15,23,42,.10);--radius:28px;
     }
-    :root {
-      --primary: #0E3B36;
-      --accent: #E2674D;
-      --bg: #f1f5f9;
-      --surface: #ffffff;
-      --text: #0f172a;
-      --text-2: #334155;
-      --text-3: #94a3b8;
-      --border: #e2e8f0;
-      --shadow: 0 24px 70px rgba(0, 0, 0, 0.08);
-      --radius: 28px;
-      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    *{box-sizing:border-box}
+    body{
+      margin:0;min-height:100vh;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 20% 15%, rgba(37,99,235,.16), transparent 32%),
+        radial-gradient(circle at 80% 20%, rgba(34,197,94,.16), transparent 28%),
+        linear-gradient(135deg,var(--bg),#F4EEE9);
+      color:var(--text);display:grid;place-items:center;padding:22px;
     }
-    body {
-      font-family: var(--font);
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 24px;
-      background-image: radial-gradient(circle at 20% 20%, rgba(14, 59, 54, 0.06), transparent 40%),
-        radial-gradient(circle at 80% 80%, rgba(226, 103, 77, 0.06), transparent 40%);
-    }
-    .wrap {
-      max-width: 1100px;
-      width: 100%;
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 28px;
-      align-items: stretch;
-    }
-    .hero,
-    .panel {
-      background: rgba(255, 255, 255, 0.82);
-      backdrop-filter: blur(18px);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 36px 32px;
-      transition: transform 0.2s;
-    }
-    .hero:hover,
-    .panel:hover {
-      transform: translateY(-2px);
-    }
-    .logo {
-      width: 72px;
-      height: 72px;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 16px 32px rgba(14, 59, 54, 0.20);
-      margin-bottom: 20px;
-    }
-    .logo img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .tag {
-      display: inline-flex;
-      gap: 8px;
-      align-items: center;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 6px 16px;
-      font-weight: 700;
-      font-size: 13px;
-      color: var(--primary);
-      margin-bottom: 16px;
-    }
-    h1 {
-      font-size: 48px;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      line-height: 1.1;
-      margin: 0 0 12px;
-    }
-    h1 span {
-      color: var(--accent);
-    }
-    .hero p {
-      color: var(--text-2);
-      font-size: 16px;
-      line-height: 1.7;
-      max-width: 480px;
-    }
-    .grid-features {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 24px;
-    }
-    .feature {
-      background: var(--bg);
-      border-radius: 16px;
-      padding: 14px 16px;
-      border: 1px solid var(--border);
-    }
-    .feature b {
-      display: block;
-      font-size: 14px;
-    }
-    .feature span {
-      font-size: 13px;
-      color: var(--text-3);
-    }
-    .panel h2 {
-      font-size: 22px;
-      font-weight: 800;
-      margin: 0 0 8px;
-    }
-    .panel p {
-      color: var(--text-2);
-      font-size: 14px;
-      line-height: 1.6;
-      margin-bottom: 20px;
-    }
-    .btn-group {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .btn {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 20px;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text);
-      font-weight: 700;
-      font-size: 15px;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow);
-      border-color: var(--primary);
-    }
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary), #082621);
-      color: #fff;
-      border-color: transparent;
-    }
-    .btn-primary:hover {
-      background: linear-gradient(135deg, #1a5a52, var(--primary));
-    }
-    .btn-accent {
-      background: linear-gradient(135deg, var(--accent), #c94f35);
-      color: #fff;
-      border-color: transparent;
-    }
-    .btn-accent:hover {
-      background: linear-gradient(135deg, #f08a74, var(--accent));
-    }
-    .btn .arrow {
-      font-size: 18px;
-      opacity: 0.6;
-    }
-    .note {
-      margin-top: 20px;
-      background: #fef3c7;
-      border: 1px solid #fcd34d;
-      border-radius: 16px;
-      padding: 14px 18px;
-      font-size: 13px;
-      color: #92400e;
-      line-height: 1.6;
-    }
-    .note code {
-      background: rgba(0, 0, 0, 0.06);
-      padding: 2px 8px;
-      border-radius: 6px;
-      font-family: var(--font);
-      font-weight: 600;
-    }
-    @media (max-width: 820px) {
-      .wrap {
-        grid-template-columns: 1fr;
-        gap: 20px;
-      }
-      .hero,
-      .panel {
-        padding: 24px 20px;
-      }
-      h1 {
-        font-size: 36px;
-      }
-      .grid-features {
-        grid-template-columns: 1fr;
-      }
-    }
-    @media (max-width: 480px) {
-      h1 {
-        font-size: 28px;
-      }
-      .btn {
-        font-size: 13px;
-        padding: 12px 16px;
-      }
-    }
+    .wrap{width:min(1060px,100%);display:grid;grid-template-columns:1.08fr .92fr;gap:22px;align-items:stretch}
+    .hero,.panel{background:rgba(255,255,255,.82);backdrop-filter:blur(18px);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:30px}
+    .logo{width:76px;height:76px;border-radius:24px;overflow:hidden;box-shadow:0 18px 35px rgba(37,99,235,.22);margin-bottom:18px}
+    .logo img{width:100%;height:100%;object-fit:cover}
+    h1{font-size:54px;line-height:1;margin:0 0 12px;letter-spacing:-.05em}
+    p{color:var(--muted);line-height:1.7;margin:0}
+    .tag{display:inline-flex;gap:8px;align-items:center;background:#F4EEE9;border:1px solid var(--border);color:#0A2E2A;border-radius:999px;padding:8px 12px;font-weight:900;font-size:13px;margin-bottom:18px}
+    .actions{display:grid;gap:12px;margin-top:24px}
+    .btn{display:flex;align-items:center;justify-content:space-between;text-decoration:none;border-radius:18px;padding:16px 18px;font-weight:950;border:1px solid var(--border);background:white;color:var(--text)}
+    .btn.primary{background:linear-gradient(135deg,var(--primary),#0A2E2A);color:white;border-color:transparent;box-shadow:0 18px 36px rgba(37,99,235,.22)}
+    .btn.success{background:linear-gradient(135deg,var(--accent),#E2674D);color:white;border-color:transparent;box-shadow:0 18px 36px rgba(34,197,94,.20)}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:24px}
+    .mini{background:white;border:1px solid var(--border);border-radius:20px;padding:16px}
+    .mini b{display:block;margin-bottom:6px}
+    .note{margin-top:20px;background:#fff7ed;border:1px solid #fed7aa;border-radius:20px;padding:16px;color:#9a3412;font-size:14px;line-height:1.6}
+    code{background:rgba(15,23,42,.06);padding:2px 6px;border-radius:8px;color:#0f172a}
+    @media(max-width:820px){.wrap{grid-template-columns:1fr}.hero,.panel{padding:24px}h1{font-size:42px}.grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
   <main class="wrap">
     <section class="hero">
-      <div class="logo"><img src="/edura-logo.png" alt="Edura" /></div>
-      <div class="tag">🚀 Payroll &amp; Absensi Sekolah</div>
-      <h1>Edura <span>V6 Stable</span></h1>
+      <div class="logo"><img src="/edura-logo.png" alt="Logo Edura"></div>
+      <div class="tag">Payroll Sekolah & Yayasan</div>
+      <h1>Edura</h1>
       <p>
-        Sistem manajemen karyawan, absensi GPS multi-lokasi, payroll otomatis,
-        dan slip gaji digital untuk sekolah &amp; yayasan.
+        Sistem manajemen karyawan, absensi GPS multi-lokasi, payroll otomatis, dan slip gaji digital
+        untuk sekolah/yayasan.
       </p>
-      <div class="grid-features">
-        <div class="feature"><b>👥 Admin PWA</b><span>Kelola karyawan, gaji, absensi, approval.</span></div>
-        <div class="feature"><b>📱 Karyawan PWA</b><span>Check-in GPS, izin, riwayat, slip.</span></div>
-        <div class="feature"><b>📍 Multi Lokasi</b><span>Bisa tambah beberapa titik sekolah/kantor.</span></div>
-        <div class="feature"><b>☁️ License Server</b><span>Backend Apps Script + Google Sheet.</span></div>
+      <div class="grid">
+        <div class="mini"><b>Admin PWA</b><span>Kelola karyawan, gaji, absensi, approval, payroll, dan slip.</span></div>
+        <div class="mini"><b>Karyawan PWA</b><span>Check-in GPS, izin/sakit, profil, riwayat, dan slip gaji.</span></div>
+        <div class="mini"><b>Multi lokasi</b><span>Bisa tambah beberapa titik sekolah/kantor/yayasan.</span></div>
+        <div class="mini"><b>License server</b><span>Backend pakai Apps Script + Google Sheet master.</span></div>
       </div>
     </section>
 
     <aside class="panel">
-      <h2>🔐 Masuk Aplikasi</h2>
-      <p>Pilih halaman sesuai peran. License Server URL diambil dari Apps Script Web App.</p>
-      <div class="btn-group">
-        <a class="btn btn-primary" href="/admin.html"><span>📊 Edura Admin</span><span class="arrow">→</span></a>
-        <a class="btn btn-accent" href="/employee.html"><span>📍 Edura Hadir</span><span class="arrow">→</span></a>
-        <a class="btn" href="/credential-center.html"><span>🔑 Credential Center</span><span class="arrow">→</span></a>
+      <h2 style="margin:0 0 10px">Masuk Aplikasi</h2>
+      <p>Pilih halaman sesuai kebutuhan. License Server URL tetap diambil dari Apps Script Web App.</p>
+      <div class="actions">
+        <a class="btn primary" href="/admin.html"><span>Buka Edura Admin</span><span>→</span></a>
+        <a class="btn success" href="/employee.html"><span>Buka Edura Hadir</span><span>→</span></a>
+        <a class="btn" href="/credential-center.html"><span>Credential Center</span><span>→</span></a>
       </div>
       <div class="note">
-        💡 Setelah deploy ke Vercel, buka <code>/admin.html</code> untuk admin dan
-        <code>/employee.html</code> untuk karyawan. Jangan lupa deploy
+        Setelah deploy repo ini ke Vercel, buka <code>/admin.html</code> untuk admin dan
+        <code>/employee.html</code> untuk karyawan. Jangan lupa deploy juga
         <code>master-apps-script-v5.gs</code> di Google Apps Script.
       </div>
     </aside>

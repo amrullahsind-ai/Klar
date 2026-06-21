@@ -2,9 +2,8 @@
   "name": "Edura Hadir",
   "short_name": "Edura Hadir",
   "start_url": "/employee.html",
-  "scope": "/",
   "display": "standalone",
-  "background_color": "#f1f5f9",
+  "background_color": "#f4f7fb",
   "theme_color": "#0E3B36",
   "icons": [
     {
@@ -23,5 +22,6 @@
       "type": "image/svg+xml",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "scope": "/"
 }

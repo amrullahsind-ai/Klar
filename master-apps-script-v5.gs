@@ -1,5 +1,5 @@
 /**
- * Edura V5.1 Master License Server + Admin/Employee Backend
+ * Edura V5.3 Master License Server + Admin/Employee Backend
  *
  * Setup:
  * 1. Buat Google Sheet baru.
@@ -34,6 +34,7 @@ function doGet(e) {
   if (action === 'employeecheckout') return jsonp(e, employeeCheckCore(e, 'checkout'));
   if (action === 'employeerequest') return jsonp(e, employeeRequestCore(e));
   if (action === 'employeechangepassword') return jsonp(e, employeeChangePasswordCore(e));
+  if (action === 'deleteemployee') return jsonp(e, deleteEmployeeCore(e));
   return jsonp(e, {ok:false,error:'Unknown GET action'});
 }
 function doPost(e) {
@@ -190,6 +191,46 @@ function handleSaveAdmin(e) {
     return json({ok:true,updatedAt:new Date().toISOString()});
   } catch (err) { return json({ok:false,error:String(err.message || err)}); }
 }
+
+function deleteEmployeeCore(e) {
+  try {
+    const license = validateLicense(clean(e.parameter.licenseCode));
+    const empId = clean(e.parameter.employeeId || e.parameter.empId || e.parameter.id);
+    if (!empId) throw new Error('employeeId kosong');
+    const data = loadDataOrFail(license.licenseCode);
+    data._deletedEmployees = data._deletedEmployees || [];
+    if (!data._deletedEmployees.some(x => String(x.id || x.employeeId || x) === empId)) {
+      data._deletedEmployees.push({id: empId, at: new Date().toISOString(), by: 'admin'});
+    }
+    const before = (data.employees || []).length;
+    data.employees = (data.employees || []).filter(x => String(x.id) !== empId);
+    // Bersihkan data terkait agar tidak hidup lagi di mirror/payroll.
+    data.attendanceRecords = data.attendanceRecords || {};
+    data._deletedAttendance = data._deletedAttendance || [];
+    Object.keys(data.attendanceRecords).forEach(date => {
+      if (data.attendanceRecords[date] && data.attendanceRecords[date][empId]) {
+        const key = date + '|' + empId;
+        if (!data._deletedAttendance.some(x => String(x.key || ((x.date || '') + '|' + (x.employeeId || ''))) === key)) {
+          data._deletedAttendance.push({key: key, date: date, employeeId: empId, at: new Date().toISOString()});
+        }
+        delete data.attendanceRecords[date][empId];
+      }
+      if (data.attendanceRecords[date] && Object.keys(data.attendanceRecords[date]).length === 0) delete data.attendanceRecords[date];
+    });
+    data.attendanceRequests = (data.attendanceRequests || []).filter(r => String(r.employeeId) !== empId);
+    data.deviceRequests = (data.deviceRequests || []).filter(r => String(r.employeeId) !== empId);
+    data.sentSlips = data.sentSlips || {};
+    Object.keys(data.sentSlips).forEach(m => { if (data.sentSlips[m]) delete data.sentSlips[m][empId]; });
+    data.locks = data.locks || {};
+    Object.keys(data.locks).forEach(m => { data.locks[m].items = (data.locks[m].items || []).filter(item => String(item.id) !== empId); });
+    const finalData = normalizeDataBeforeSave(data);
+    savePayload(license, JSON.stringify(finalData));
+    writeMirrorTabs(license, finalData);
+    writeLog(license.licenseCode, 'deleteEmployee', 'OK ' + empId);
+    return {ok:true, employeeId:empId, deleted: before - finalData.employees.length, updatedAt:new Date().toISOString()};
+  } catch (err) { return {ok:false,error:String(err.message || err)}; }
+}
+
 function handleLoadEmployee(e) {
   try {
     const license = validateLicense(clean(e.parameter.licenseCode));
