@@ -178,3 +178,8 @@ Versi ini memperbaiki bug data Excel yang hilang setelah pindah tab/refresh. Set
 - Hapus karyawan langsung hilang dari tabel tanpa reload.
 - Tombstone karyawan yang dihapus dipertahankan saat refresh server agar data lama tidak muncul kembali.
 - Setelah hapus, aplikasi menahan refresh server sebentar dan memaksa sync penghapusan ke Apps Script.
+
+
+## Catatan V6.3
+
+V6.3 menambahkan perbaikan database repair untuk error `Unexpected token 'D', "DEMO" is not valid JSON`. Jika payload di `_database` rusak, backend membackup ke `_database_broken` dan membuat database kosong valid. Lihat `V6_3_DATABASE_REPAIR.md`.

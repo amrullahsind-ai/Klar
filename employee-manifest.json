@@ -1,10 +1,10 @@
 {
   "name": "Edura Hadir",
-  "short_name": "Edura Hadir",
+  "short_name": "Edura",
   "start_url": "/employee.html",
   "display": "standalone",
-  "background_color": "#f4f7fb",
-  "theme_color": "#0E3B36",
+  "background_color": "#F7F7F2",
+  "theme_color": "#123C46",
   "icons": [
     {
       "src": "/edura-logo.png",
