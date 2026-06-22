@@ -2,29 +2,11 @@
   "cleanUrls": true,
   "headers": [
     {
-      "source": "/(.*).html",
+      "source": "/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "no-store"
-        }
-      ]
-    },
-    {
-      "source": "/service-worker.js",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-store"
-        }
-      ]
-    },
-    {
-      "source": "/(.*).json",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-cache"
+          "value": "no-store, max-age=0"
         }
       ]
     }
