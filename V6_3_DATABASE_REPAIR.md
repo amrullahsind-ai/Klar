@@ -1,4 +1,4 @@
-# Edura V6.3 — Database Repair Fix
+# Klar V6.3 — Database Repair Fix
 
 Versi ini memperbaiki error:
 
@@ -6,7 +6,7 @@ Versi ini memperbaiki error:
 Unexpected token 'D', "DEMO" is not valid JSON
 ```
 
-Penyebabnya: kolom `payload` pada sheet `_database` berisi teks biasa seperti `DEMO`, bukan JSON database Edura.
+Penyebabnya: kolom `payload` pada sheet `_database` berisi teks biasa seperti `DEMO`, bukan JSON database Klar.
 
 ## Yang diperbaiki
 

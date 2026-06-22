@@ -1,4 +1,4 @@
-# Edura V6.2 - Login YearsWorked Fix
+# Klar V6.2 - Login YearsWorked Fix
 
 Fokus patch:
 - memperbaiki error login karyawan: `yearsWorked is not defined`.

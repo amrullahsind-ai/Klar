@@ -1,4 +1,4 @@
-# Troubleshooting Edura V4
+# Troubleshooting Klar V4
 
 ## Muncul: Gagal akses server
 
@@ -70,14 +70,14 @@ Solusi: paste ulang `master-apps-script-v5.gs` dari paket hotfix ini, lalu Apps 
 Kemungkinan penyebab:
 
 1. Internet admin tidak aktif saat import. Pembaca Excel dimuat dari CDN.
-2. File Excel terlalu bebas/berantakan. Gunakan template resmi `template-import-edura.xlsx` agar paling aman.
+2. File Excel terlalu bebas/berantakan. Gunakan template resmi `template-import-klar.xlsx` agar paling aman.
 3. Nama kolom tidak terbaca. Pakai mapping manual pada menu Import Excel.
 4. Payroll awal tidak masuk karena nama/NIP di sheet Payroll Awal tidak cocok dengan data karyawan. Import karyawan dulu, baru import payroll awal.
 
 
 ## Update V4.6 — Import Excel Fleksibel
 
-Import Excel sekarang tidak bergantung pada nama sheet `Karyawan`, `Golongan`, atau `Payroll Awal`. Admin bisa upload Excel lama dengan banyak tab dan nama sheet bebas. Edura akan:
+Import Excel sekarang tidak bergantung pada nama sheet `Karyawan`, `Golongan`, atau `Payroll Awal`. Admin bisa upload Excel lama dengan banyak tab dan nama sheet bebas. Klar akan:
 
 - scan semua sheet;
 - mencari baris header otomatis walaupun ada judul di atas;

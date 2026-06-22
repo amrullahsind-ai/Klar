@@ -1,4 +1,4 @@
-# Edura V5.3 — Hard Delete + Stability Notes
+# Klar V5.3 — Hard Delete + Stability Notes
 
 ## Perbaikan hapus karyawan
 Versi ini tidak lagi hanya mengandalkan autosync payload besar untuk menghapus karyawan. Admin PWA sekarang memanggil endpoint server khusus `deleteEmployee`, sehingga karyawan dihapus langsung dari payload server, mirror Sheet, attendance record, request, device request, sent slip, dan payroll lock.

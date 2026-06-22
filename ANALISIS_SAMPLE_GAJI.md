@@ -1,4 +1,4 @@
-# Analisis `sample gaji.xlsx` untuk Edura V4.4
+# Analisis `sample gaji.xlsx` untuk Klar V4.4
 
 ## Keputusan terbaru
 File Excel dipakai sebagai **contoh aturan dan format perhitungan**, bukan dimasukkan mentah-mentah seluruh master jabatannya.
@@ -17,7 +17,7 @@ Yang tidak dimasukkan otomatis:
 - seluruh 90 baris golongan;
 - seluruh nama/karyawan dari Excel.
 
-## Struktur default Edura
+## Struktur default Klar
 Default sekarang dibuat ringkas:
 - beberapa jabatan inti sekolah/yayasan;
 - beberapa golongan contoh 1A sampai 3B;

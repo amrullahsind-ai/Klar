@@ -1,8 +1,8 @@
-# Panduan Deploy Edura V4
+# Panduan Deploy Klar V4
 
 ## 1. Setup License Server
 
-1. Buat Google Sheet baru: `Edura Master`.
+1. Buat Google Sheet baru: `Klar Master`.
 2. Buka `Extensions -> Apps Script`.
 3. Paste isi `master-apps-script-v5.gs`.
 4. Klik Save.
@@ -65,9 +65,9 @@ Versi ini memakai autosync di Admin PWA. Setelah admin menyimpan karyawan, atura
 
 ## Fitur Import Excel V4.5
 
-Versi ini menambahkan menu **Import Excel** di Edura Admin. Admin bisa:
+Versi ini menambahkan menu **Import Excel** di Klar Admin. Admin bisa:
 
-- download `template-import-edura.xlsx`;
+- download `template-import-klar.xlsx`;
 - upload Excel lama sekolah/yayasan;
 - preview sheet dan baris data;
 - mapping kolom untuk Excel bebas;
@@ -79,7 +79,7 @@ Catatan: fitur import Excel memakai library pembaca Excel dari CDN saat tombol i
 
 ## Update V4.6 — Import Excel Fleksibel
 
-Import Excel sekarang tidak bergantung pada nama sheet `Karyawan`, `Golongan`, atau `Payroll Awal`. Admin bisa upload Excel lama dengan banyak tab dan nama sheet bebas. Edura akan:
+Import Excel sekarang tidak bergantung pada nama sheet `Karyawan`, `Golongan`, atau `Payroll Awal`. Admin bisa upload Excel lama dengan banyak tab dan nama sheet bebas. Klar akan:
 
 - scan semua sheet;
 - mencari baris header otomatis walaupun ada judul di atas;

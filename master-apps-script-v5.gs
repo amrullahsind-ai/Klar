@@ -1,5 +1,5 @@
 /**
- * Edura V6.4 - Apps Script License Server (Stable Pilot)
+ * Klar V6.4 - Apps Script License Server (Stable Pilot)
  * Deploy: Execute as: Me, Who has access: Anyone with the link.
  * Supports: admin load/save, employee login by NIP/Login/Nama/Kode, check-in/out, request, change password.
  */
@@ -27,7 +27,7 @@ function route_(p, post){
   const action = p.action || 'loadAdmin';
   const licenseCode = String(p.licenseCode || DEFAULT_LICENSE).trim();
   ensure_();
-  if(action === 'ping' || action === 'health') return {ok:true, app:'Edura', version:'V6.4', licenseCode, time:new Date().toISOString()};
+  if(action === 'ping' || action === 'health') return {ok:true, app:'Klar', version:'V6.4', licenseCode, time:new Date().toISOString()};
   if(action === 'repairDatabase') return repairDatabase_(licenseCode, p.force === '1' || p.force === 'true');
   if(action === 'loadAdmin') return loadAdmin_(licenseCode);
   if(action === 'saveAdmin') return saveAdmin_(licenseCode, p.payload || '{}');
@@ -107,16 +107,16 @@ function normalizeDb_(data, licenseCode){
   data.backupLogs = Array.isArray(data.backupLogs) ? data.backupLogs : [];
   data.importHistory = Array.isArray(data.importHistory) ? data.importHistory : [];
   data.settings = data.settings && typeof data.settings === 'object' ? data.settings : {};
-  if(!data.settings.school) data.settings.school = schoolNameFromLicense_(licenseCode) || 'Edura';
+  if(!data.settings.school) data.settings.school = schoolNameFromLicense_(licenseCode) || 'Klar';
   return data;
 }
 function defaultDb_(licenseCode, schoolName){
   return normalizeDb_({
     version:'V6.4',
-    settings:{school: schoolName && schoolName !== 'DEMO' ? schoolName : 'Edura Demo', yayasan:'', logo:'', primary:'#123C46', accent:'#F29B5B'},
+    settings:{school: schoolName && schoolName !== 'DEMO' ? schoolName : 'Klar Demo', yayasan:'', logo:'', primary:'#123C46', accent:'#F29B5B'},
     employees:[], positions:[], grades:[], components:[], deductions:[],
     attendanceRecords:{}, attendanceRequests:[], deviceRequests:[], locks:{}, sentSlips:{}, auditLogs:[], backupLogs:[], importHistory:[],
-    _createdAt:new Date().toISOString(), _note:'Database dibuat/diperbaiki otomatis oleh Edura V6.4'
+    _createdAt:new Date().toISOString(), _note:'Database dibuat/diperbaiki otomatis oleh Klar V6.4'
   }, licenseCode);
 }
 function backupBroken_(licenseCode, raw, rowSnapshot, reason){
@@ -133,7 +133,7 @@ function ensureDemoLicense_(){
   try{
     const li = sh_(LICENSE_SHEET), vals = li.getDataRange().getValues();
     for(let i=1;i<vals.length;i++) if(String(vals[i][0]).trim() === DEFAULT_LICENSE) return;
-    li.appendRow([DEFAULT_LICENSE,'Edura Demo','active','demo','','Dibuat otomatis oleh Edura V6.4']);
+    li.appendRow([DEFAULT_LICENSE,'Klar Demo','active','demo','','Dibuat otomatis oleh Klar V6.4']);
   }catch(e){}
 }
 function repairDatabase_(licenseCode, force){
@@ -204,7 +204,7 @@ function empView_(db, emp, p){
   const pos = (db.positions||[]).find(x=>x.id===emp.position) || {}; const gr = (db.grades||[]).find(x=>x.id===emp.grade) || {};
   const hist = Object.keys(recs).sort().reverse().slice(0,40).map(date=>Object.assign({date}, (recs[date]||{})[emp.id]||{})).filter(x=>x.status);
   const slip = latestSlip_(db, emp.id);
-  return {ok:true, employee:Object.assign({}, emp, {positionName:pos.name||'', gradeName:gr.name||'', years:years_(emp.join, emp.yearsImported)}), school:(db.settings||{}).school||'Edura', todayRecord, history:hist, slip, todayRequest:(db.attendanceRequests||[]).find(r=>r.employeeId===emp.id && r.date===d && r.status==='pending') || null, deviceStatus:'aktif'};
+  return {ok:true, employee:Object.assign({}, emp, {positionName:pos.name||'', gradeName:gr.name||'', years:years_(emp.join, emp.yearsImported)}), school:(db.settings||{}).school||'Klar', todayRecord, history:hist, slip, todayRequest:(db.attendanceRequests||[]).find(r=>r.employeeId===emp.id && r.date===d && r.status==='pending') || null, deviceStatus:'aktif'};
 }
 function loadEmployee_(licenseCode,p){ const db=loadPayload_(licenseCode); if(!db) throw new Error('Database belum ada. Sync dari Admin dulu.'); const emp=checkEmployee_(db,p); return empView_(db,emp,p); }
 function employeeChangePassword_(licenseCode,p){ return withDB_(licenseCode, db=>{ const emp=checkEmployee_(db,p); emp.employeePinHash = p.newHash; emp.updatedAt = new Date().toISOString(); log_('employeeChangePassword', licenseCode, emp.name); return {ok:true,message:'Password berhasil diganti'}; }); }

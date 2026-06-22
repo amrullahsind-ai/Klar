@@ -1,4 +1,4 @@
-# Edura V6.1 Stable Pilot Fix
+# Klar V6.1 Stable Pilot Fix
 
 Perubahan utama:
 

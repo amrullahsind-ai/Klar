@@ -1,8 +1,8 @@
-# Edura V5.3 Hard Delete + Stability Fix
+# Klar V5.3 Hard Delete + Stability Fix
 
 Versi ini memperbaiki hapus karyawan agar langsung menghapus dari server melalui endpoint khusus `deleteEmployee`, bukan hanya menunggu autosync.
 
-# Edura V4.4 - Payroll UI Clean Fix
+# Klar V4.4 - Payroll UI Clean Fix
 
 
 Ini paket ulang dari nol. Abaikan ZIP sebelumnya.
@@ -113,15 +113,15 @@ Catatan: Vercel hanya hosting frontend. Data login, password hash, lokasi, absen
 - Excel sample sekarang dipakai sebagai contoh aturan, bukan diimpor semua master jabatan/golongan.
 - Default jabatan dan golongan dibuat ringkas agar UI tidak penuh.
 - Bug gaji Rp0 diperbaiki lewat fallback `baseSalary/salary` dan normalisasi data karyawan.
-- Warna Edura dikunci untuk brand identity.
+- Warna Klar dikunci untuk brand identity.
 - Daftar panjang dibatasi di halaman utama; klik `Lihat semua` untuk membuka modal tengah.
 
 
 ## Fitur Import Excel V4.5
 
-Versi ini menambahkan menu **Import Excel** di Edura Admin. Admin bisa:
+Versi ini menambahkan menu **Import Excel** di Klar Admin. Admin bisa:
 
-- download `template-import-edura.xlsx`;
+- download `template-import-klar.xlsx`;
 - upload Excel lama sekolah/yayasan;
 - preview sheet dan baris data;
 - mapping kolom untuk Excel bebas;
@@ -133,7 +133,7 @@ Catatan: fitur import Excel memakai library pembaca Excel dari CDN saat tombol i
 
 ## Update V4.6 — Import Excel Fleksibel
 
-Import Excel sekarang tidak bergantung pada nama sheet `Karyawan`, `Golongan`, atau `Payroll Awal`. Admin bisa upload Excel lama dengan banyak tab dan nama sheet bebas. Edura akan:
+Import Excel sekarang tidak bergantung pada nama sheet `Karyawan`, `Golongan`, atau `Payroll Awal`. Admin bisa upload Excel lama dengan banyak tab dan nama sheet bebas. Klar akan:
 
 - scan semua sheet;
 - mencari baris header otomatis walaupun ada judul di atas;
@@ -169,7 +169,7 @@ Versi ini memperbaiki Excel legacy yang kolom nama berisi kode. PER UNIT menjadi
 - Jabatan/golongan hasil import tidak direset otomatis hanya karena jumlahnya banyak.
 
 
-## Edura V5.1 Import Persistence Fix
+## Klar V5.1 Import Persistence Fix
 
 Versi ini memperbaiki bug data Excel yang hilang setelah pindah tab/refresh. Setelah import, data lokal dikunci sementara dan dikirim ulang ke server. Backend juga menggabungkan data karyawan agar import tidak hilang karena autosync payload lama.
 

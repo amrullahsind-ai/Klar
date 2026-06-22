@@ -1,6 +1,6 @@
 # Rancangan Modul Komponen Variabel & Lembur
 
-Untuk tunjangan seperti lembur, transport khusus, piket hari libur, pengganti mengajar, dan bonus lain yang tidak bisa digeneralisasi, Edura sebaiknya punya modul baru.
+Untuk tunjangan seperti lembur, transport khusus, piket hari libur, pengganti mengajar, dan bonus lain yang tidak bisa digeneralisasi, Klar sebaiknya punya modul baru.
 
 ## Struktur yang dibutuhkan
 
